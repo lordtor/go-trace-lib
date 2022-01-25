@@ -6,14 +6,13 @@ import (
 
 // ProviderConfig представляет конфигурацию поставщика и используется для создания нового типа "Поставщик".
 type ProviderConfig struct {
-	JaegerEndpoint string
-	JaegerHost     string
-	JaegerPort     string
-	ServiceName    string
-	ServiceVersion string
-	Environment    string
-	// Set this to `true` if you want to disable tracing completly.
-	Disabled bool
+	JaegerEndpoint string `json:"jaeger_endpoint" yaml:"jaeger_endpoint"`
+	JaegerHost     string `json:"jaeger_host" yaml:"jaeger_host"`
+	JaegerPort     string `json:"jaeger_port" yaml:"jaeger_port"`
+	ServiceName    string `json:"service_name" yaml:"service_name"`
+	ServiceVersion string `json:"service_version" yaml:"service_version"`
+	Environment    string `json:"environment" yaml:"environment"`
+	Disabled       bool   `json:"disabled" yaml:"disabled"`
 }
 
 // Поставщик представляет поставщика трассировщика. В зависимости от конфигурации.Параметр "Отключен",
