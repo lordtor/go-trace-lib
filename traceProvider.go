@@ -21,7 +21,7 @@ var (
 )
 
 func AgentEndpoint(config ProviderConfig) (*jaeger.Exporter, error) {
-	Log.Info("Jaeger provaider type set as AgentEndpoint")
+	Log.Debug("Jaeger provaider type set as AgentEndpoint")
 	exp, err := jaeger.New(jaeger.WithAgentEndpoint(
 		jaeger.WithAgentHost(config.JaegerHost),
 		jaeger.WithAgentPort(config.JaegerPort),
@@ -35,7 +35,7 @@ func AgentEndpoint(config ProviderConfig) (*jaeger.Exporter, error) {
 	return exp, nil
 }
 func CollectorEndpoint(config ProviderConfig) (*jaeger.Exporter, error) {
-	Log.Info("Jaeger provaider type set as CollectorEndpoint")
+	Log.Debug("Jaeger provaider type set as CollectorEndpoint")
 	exp, err := jaeger.New(jaeger.WithCollectorEndpoint(jaeger.WithEndpoint(config.JaegerEndpoint)))
 	if err != nil {
 		Log.Error(err)
@@ -47,7 +47,7 @@ func CollectorEndpoint(config ProviderConfig) (*jaeger.Exporter, error) {
 // New возвращает новый тип "Поставщик`. Он использует экспортер Jaeger и глобально устанавливает поставщика трассировщика,
 // а также глобальный трассировщик для пролетов.
 func NewProvider(config ProviderConfig) (Provider, error) {
-	Log.Info("Create new jaeger provider")
+	Log.Debug("Create new jaeger provider")
 	if config.Disabled {
 		return Provider{provider: trace.NewNoopTracerProvider()}, nil
 	}
@@ -62,7 +62,7 @@ func NewProvider(config ProviderConfig) (Provider, error) {
 		Log.Error("Error set jaeger provider")
 		return Provider{}, err
 	}
-	Log.Info("Setting jaeger provider")
+	Log.Debug("Setting jaeger provider")
 	prv := sdktrace.NewTracerProvider(
 		sdktrace.WithBatcher(exp),
 		sdktrace.WithResource(sdkresource.NewWithAttributes(
@@ -72,7 +72,7 @@ func NewProvider(config ProviderConfig) (Provider, error) {
 			semconv.DeploymentEnvironmentKey.String(config.Environment),
 		)),
 	)
-	Log.Debugf("Jaeger provider sets ServiceName: %s, ServiceVersion: %s, Environment: %s", config.ServiceName, config.ServiceVersion, config.Environment)
+	Log.Infof("Jaeger provider sets ServiceName: %s, ServiceVersion: %s, Environment: %s", config.ServiceName, config.ServiceVersion, config.Environment)
 	otel.SetTracerProvider(prv)
 	otel.SetTextMapPropagator(propagation.NewCompositeTextMapPropagator(
 		propagation.TraceContext{},

@@ -13,7 +13,7 @@ import (
 // В зависимости от аргумента "cus" диапазон может быть либо простым, либо настраиваемым.
 // Каждый результирующий интервал должен быть завершен с помощью функции `defer span.End()` сразу после вызова.
 func NewSpan(ctx context.Context, name string, cus SpanCustomiser) (context.Context, trace.Span) {
-	Log.Debugf("Create new span: %s", name)
+	Log.Tracef("Create new span: %s", name)
 	if cus == nil {
 		return otel.Tracer("").Start(ctx, name)
 	}
@@ -32,7 +32,7 @@ func SpanFromContext(ctx context.Context) trace.Span {
 // Добавить теги диапазона добавляет новые теги в диапазон. Он появится в разделе "Теги"
 // выбранного диапазона. Используйте это, если вы считаете, что тег и его значение могут быть полезны при отладке.
 func AddSpanTags(span trace.Span, tags map[string]string) {
-	Log.Debugf("Add span: %s tags", span.SpanContext().SpanID())
+	Log.Tracef("Add span: %s tags", span.SpanContext().SpanID())
 	list := make([]attribute.KeyValue, len(tags))
 	var i int
 	for k, v := range tags {
@@ -46,7 +46,7 @@ func AddSpanTags(span trace.Span, tags map[string]string) {
 // AddSpanEvents добавляет новые события в диапазон. Он появится в разделе "Журналы" выбранного диапазона.
 // Используйте это, если событие может означать что-то ценное во время отладки.
 func AddSpanEvents(span trace.Span, name string, events map[string]string) {
-	Log.Debugf("Add span: %s events: %s", span.SpanContext().SpanID(), name)
+	Log.Tracef("Add span: %s events: %s", span.SpanContext().SpanID(), name)
 	list := make([]trace.EventOption, len(events))
 	var i int
 	for k, v := range events {
@@ -61,7 +61,7 @@ func AddSpanEvents(span trace.Span, name string, events map[string]string) {
 // Используйте это, если вы считаете, что вам следует регистрировать любые исключения, такие как критические, ошибки,
 // предупреждения, предостережения и т.д. Избегайте регистрации конфиденциальных данных!
 func AddSpanError(span trace.Span, err error) {
-	Log.Debugf("Add span: %s error: %s", span.SpanContext().SpanID(), err.Error())
+	Log.Tracef("Add span: %s error: %s", span.SpanContext().SpanID(), err.Error())
 	span.RecordError(err)
 }
 
